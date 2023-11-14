@@ -20,22 +20,24 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Tentukan Tujuan</h4>
-							<form onsubmit="redirectToResultPage(event); return false;" method="GET" class="my-login-validation" novalidate="">
+							<form autocomplete="off" onsubmit="redirectToResultPage(event); return false;" method="GET" class="my-login-validation"  novalidate="">
 								<div class="form-group">
 									<label for="email">Lokasi Anda</label>
-									<input class="form-control" id="email" name="email" value="" required autofocus>
+									<input type="text" placeholder="Tuliskan Lokasi Anda..." class="form-control" id="email" name="email" value="" required autofocus>
 									<div class="invalid-feedback">
 										Lokasi anda harus diisi!
 									</div>
 								</div>
+                                <ul class="list"></ul>
 
 								<div class="form-group">
 									<label for="password">Lokasi Tujuan</label>
-									<input class="form-control" id="password" name="password" required data-eye>
+									<input type="text" placeholder="Tuliskan Lokasi Tujuan Anda..." class="form-control" id="password" name="password" required data-eye>
 								    <div class="invalid-feedback">
 								    	Lokasi tujuan harus diisi!
 							    	</div>
 								</div>
+                                <ul class="list"></ul>
 
 								<div class="form-group m-0">
 									<button type="submit" class="btn btn-primary btn-block">

@@ -1,3 +1,9 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+  }
+
 html,body {
 	height: 100%;
 }
@@ -73,3 +79,23 @@ body.my-login-page {
 		padding: 15px;
 	}
 }
+  
+  ul {
+	list-style: none;
+  }
+  
+  .list {
+	width: 100%;
+	background-color: #ffffff;
+	border-radius: 0 0 5px 5px;
+	position: absolute;
+	left: 0%;
+  }
+  
+  .list-items {
+	padding: 10px 44px;
+  }
+  
+  .list-items:hover {
+	background-color: #dddddd;
+  }
