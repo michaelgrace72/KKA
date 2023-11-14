@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <title>Flowchart</title>
+    <script>
+        function redirectToResultPage() {
+            // Retrieve the values from the input fields
+            var initialLocation = document.getElementById("initial-location").value;
+            var goal = document.getElementById("goal").value;
+            
+            // Construct the URL for the result page with query parameters
+            var url = "result.html?initialLocation=" + encodeURIComponent(initialLocation) + "&goal=" + encodeURIComponent(goal);
+            
+            // Redirect the user to the result page
+            window.location.href = url;
+        }
+    </script>
+</head>
+<body>
+    <h1>Flowchart</h1>
+    <form onsubmit="redirectToResultPage(); return false;">
+        <label for="initial-location">Initial Location:</label>
+        <input type="text" id="initial-location" name="initial-location"><br><br>
+        
+        <label for="goal">Goal:</label>
+        <input type="text" id="goal" name="goal"><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
