@@ -6,11 +6,12 @@
     <title>Document</title>
 
     <title>Flowchart</title>
+    <link rel="stylesheet" href="style.css">
     <script>
         function redirectToResultPage() {
             // Retrieve the values from the input fields
-            var initialLocation = document.getElementById("initial-location").value;
-            var goal = document.getElementById("goal").value;
+            var initialLocation = document.getElementById("username").value;
+            var goal = document.getElementById("password").value;
             
             // Construct the URL for the result page with query parameters
             var url = "result.html?initialLocation=" + encodeURIComponent(initialLocation) + "&goal=" + encodeURIComponent(goal);
@@ -21,15 +22,20 @@
     </script>
 </head>
 <body>
-    <h1>Flowchart</h1>
+    <div class="background">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
     <form onsubmit="redirectToResultPage(); return false;">
-        <label for="initial-location">Initial Location:</label>
-        <input type="text" id="initial-location" name="initial-location"><br><br>
-        
-        <label for="goal">Goal:</label>
-        <input type="text" id="goal" name="goal"><br><br>
-        
-        <input type="submit" value="Submit">
+        <h3>Welcome to SubBusRoute</h3>
+
+        <label for="username">Initial Location</label>
+        <input type="text" placeholder="Initial Location" id="username">
+
+        <label for="password">Goal</label>
+        <input type="text" placeholder="Goal" id="password">
+
+        <button type="submit" value="submit">Search!</button>
     </form>
 </body>
 </html>
