@@ -1,19 +1,123 @@
 function redirectToResultPage() {
+    event.preventDefault();
+    // Retrieve the values from the input fields
+    var initialLocation = document.getElementById("email").value;
+    var goal = document.getElementById("password").value;
 
-	event.preventDefault();
-	// Retrieve the values from the input fields
-	var initialLocation = document.getElementById("email").value;
-	var goal = document.getElementById("password").value;
+	localStorage.setItem('initialLocation', initialLocation);
+	localStorage.setItem('Endlocation', goal);
+	
 
-	if (!initialLocation || !goal) {
-		return;
-	}
-	// Construct the URL for the result page with query parameters
-	var url = "result.html?initialLocation=" + encodeURIComponent(initialLocation) + "&goal=" + encodeURIComponent(goal);
+    if (!initialLocation || !goal) {
+        return;
+    }
 
-	// Redirect the user to the result page
-	window.location.href = url;
+    // Jarak garis lurus ke Surabaya
+    const cities_x = {
+        'Magetan': 162,
+        'Surabaya': 0,
+        'Ngawi': 130,
+        'Ponorogo': 128,
+        'Madiun': 126,
+        'Bojonegoro': 60,
+        'Nganjuk': 70,
+        'Jombang': 36,
+        'Lamongan': 36,
+        'Gresik': 12,
+    };
+
+    const graph = {
+        'Magetan': {'Ngawi': 32, 'Ponorogo': 34, 'Madiun': 22},
+        'Ngawi': {'Magetan': 32, 'Madiun': 30, 'Bojonegoro': 44},
+        'Ponorogo': {'Magetan': 34, 'Madiun': 29},
+        'Bojonegoro': {'Ngawi': 44, 'Nganjuk': 33, 'Jombang': 70, 'Lamongan': 42},
+        'Madiun': {'Magetan': 22, 'Ngawi': 30, 'Ponorogo': 29, 'Nganjuk': 48},
+        'Nganjuk': {'Madiun': 48, 'Bojonegoro': 33, 'Jombang': 40},
+        'Lamongan': {'Bojonegoro': 42, 'Gresik': 14},
+        'Jombang': {'Bojonegoro': 70, 'Nganjuk': 40, 'Surabaya': 72},
+        'Gresik': {'Lamongan': 14, 'Surabaya': 12},
+        'Surabaya': {'Gresik': 12, 'Jombang': 72},
+    };
+
+    function heuristic(city1, city2) {
+        return Math.abs(cities_x[city1] - cities_x[city2]);
+    }
+
+    class Node {
+        constructor(state, parent = null, cost = 0, heuristic = 0) {
+            this.state = state;
+            this.parent = parent;
+            this.cost = cost;
+            this.heuristic = heuristic;
+        }
+
+        compareTo(other) {
+            return this.cost + this.heuristic - (other.cost + other.heuristic);
+        }
+    }
+
+    function astar(graph, start, goal) {
+        const openSet = [];
+        const closedSet = new Set();
+
+        const startNode = new Node(start, null, 0, heuristic(start, goal));
+        openSet.push(startNode);
+
+        while (openSet.length > 0) {
+            openSet.sort((a, b) => a.compareTo(b));
+            const current = openSet.shift();
+
+            if (current.state === goal) {
+                const path = [];
+                let currentNode = current;
+                while (currentNode) {
+                    path.push(currentNode.state);
+                    currentNode = currentNode.parent;
+                }
+                return path.reverse();
+            }
+
+            closedSet.add(current.state);
+
+            for (const [neighbor, cost] of Object.entries(graph[current.state])) {
+                if (closedSet.has(neighbor)) {
+                    continue;
+                }
+
+                const tentativeCost = current.cost + cost;
+                const neighborNode = new Node(neighbor, current, tentativeCost, heuristic(neighbor, goal));
+
+                const existingNodeIndex = openSet.findIndex(node => node.state === neighbor);
+                if (existingNodeIndex === -1) {
+                    openSet.push(neighborNode);
+                } else if (neighborNode.compareTo(openSet[existingNodeIndex]) < 0) {
+                    openSet[existingNodeIndex] = neighborNode;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    var start = 'Lamongan';
+    var goal = 'Surabaya';
+
+    var shortestPath = astar(graph, start, goal);
+
+    // Convert the array to a string
+    var shortestPathString = shortestPath.join('->');
+
+	localStorage.setItem('shortestPathString', shortestPath);
+
+	localStorage.setItem('goal', goal);
+    // Construct the URL for the result page with query parameters
+
+    // Redirect the user to the result page
+    window.location.href = "result.html";
 }
+
+
+
 
 let locations = ["Purabaya", "Dukuh Menanggal", "Siwalankerto", "Taman Pelagi", "RS Bhayangkara", "UBHARA", "PUSVETMA", "Wonokromo",
 	"Joyoboyo", "Museum BI", "Rumah Sakit Darmo", "Pandegiling", "Basra", "Kaliasin", "Embong Malang", "Blauran", "Pringadi", "Pasar Turi",

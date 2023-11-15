@@ -6,6 +6,10 @@
     <title>Result Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="CSS/style.css">
+
+    <!-- pyscript -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
 </head>
 <body class="my-login-page">
     <section class="h-100">
@@ -25,7 +29,7 @@
 
                             <!-- Section for the price and time estimation of the initial location -->
                             <div class="mt-3">
-                                <h4>Initial Location Details</h4>
+                                <h4>Info</h4>
                                 <p><strong>Price:</strong></p>
                                 <p><span id="initialLocationPrice"></span></p>
                                 <p><strong>Time Estimation:</strong></p>
@@ -34,10 +38,16 @@
 
                             <!-- Section for Lokasi Anda and Lokasi Tujuan -->
                             <div class="mt-3" id="Hasil">
-                                <h4>User Input</h4>
+                                <h4>Route</h4>
                                 <p><strong>Lokasi Anda:</strong> <span id="userLocation"></span></p>
                                 <p><strong>Lokasi Tujuan:</strong> <span id="lastLocation"></span></p>
                             </div>
+
+                            <div>
+                                <h4>Shortest Route:</h4>
+                                <ul id="shortestRoute"></ul>
+                            </div>
+
                         </div>
                     </div>
                     <div class="footer">
@@ -51,23 +61,31 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
     <script>
-        // Extracting parameters from the URL
-        var urlParams = new URLSearchParams(window.location.search);
-
         // Sample data for initial location details
         var initialLocationPrice = "Sample Price";
         var initialLocationTime = "Sample Time";
 
+        var initialLocation =  localStorage.getItem('initialLocation');
+	    var endlocation = localStorage.getItem('Endlocation');
+        var goal = localStorage.getItem('goal');
         // Displaying values for initial location details on the page
         document.getElementById('initialLocationPrice').innerText = initialLocationPrice;
         document.getElementById('initialLocationTime').innerText = initialLocationTime;
-
         // Displaying values for Lokasi Anda and Lokasi Tujuan on the page
-        document.getElementById('userLocation').innerText = urlParams.get('initialLocation');
-        document.getElementById('lastLocation').innerText = urlParams.get('goal');
-        document.getElementById('goalLocation').innerText = urlParams.get('goal');
+        document.getElementById('userLocation').innerText = initialLocation;
+        document.getElementById('lastLocation').innerText = endlocation;
+        document.getElementById('goalLocation').innerText = endlocation;
+
+        var shortestPath = localStorage.getItem('shortestPathString');
+        var shortestPathArray = shortestPath.split('->');
+
+        var shortestPathList = document.getElementById('shortestRoute');
+        shortestPathArray.forEach(function (path) {
+        var listItem = document.createElement('li');
+        listItem.innerText = path;
+        shortestPathList.appendChild(listItem);
+        });
     </script>
 </body>
 </html>
