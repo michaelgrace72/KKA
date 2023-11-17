@@ -346,6 +346,9 @@ def find_route(start_rute, end_rute, start_halte, end_halte):
     goal_halte = end_halte
     all_heuristics = calculate_all_heuristics(goal_halte)
     
+    if end_rute == 'R1' and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
+        start_rute = "R1"
+
     if (start_rute == goal_rute):
         path_to_goal = astar(graph[current_rute], start_halte, end_halte, all_heuristics)
         if path_to_goal:
@@ -355,7 +358,8 @@ def find_route(start_rute, end_rute, start_halte, end_halte):
         transit_key = (current_rute, goal_rute)
         if transit_key in transit_dict:
             transit_halte = transit_dict[transit_key]
-        
+            
+
             path_to_transit = astar(graph[start_rute], start_halte, transit_halte, all_heuristics)
             if path_to_transit:
                 print(f"Rute tercepat dari {start_halte} ke {transit_halte}: {current_rute} - {path_to_transit}")
@@ -401,16 +405,16 @@ def find_route(start_rute, end_rute, start_halte, end_halte):
                 start_halte = transit2
                 find_route(current_rute, end_rute, start_halte, end_halte)
 
+
 start_halte = input("Masukkan halte awal: ")
 end_halte = input("Masukkan halte akhir: ")
+start_rute = None
+end_rute = None
 
 for rute, haltes in graph.items():
     if start_halte in haltes:
         start_rute = rute
     if end_halte in haltes:
         end_rute = rute
-
-if end_rute == 'R1' and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
-    start_rute = "R1"
 
 find_route(start_rute, end_rute, start_halte, end_halte)
