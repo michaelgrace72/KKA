@@ -99,7 +99,7 @@ function redirectToResultPage() {
         return null;
     }
 
-    var start = 'Lamongan';
+    var start = 'Magetan';
     var goal = 'Surabaya';
 
     var shortestPath = astar(graph, start, goal);
@@ -107,7 +107,7 @@ function redirectToResultPage() {
     // Convert the array to a string
     var shortestPathString = shortestPath.join('->');
 
-	localStorage.setItem('shortestPathString', shortestPath);
+	localStorage.setItem('shortestPathString', shortestPathString);
 
 	localStorage.setItem('goal', goal);
     // Construct the URL for the result page with query parameters
@@ -120,7 +120,7 @@ function redirectToResultPage() {
 
 
 let locations = ["Purabaya", "Dukuh Menanggal", "Siwalankerto", "Taman Pelagi", "RS Bhayangkara", "UBHARA", "PUSVETMA", "Wonokromo",
-	"Joyoboyo", "Museum BI", "Rumah Sakit Darmo", "Pandegiling", "Basra", "Kaliasin", "Embong Malang", "Blauran", "Pringadi", "Pasar Turi",
+	"Joyoboyo", "Museum	 BI", "Rumah Sakit Darmo", "Pandegiling", "Basra", "Kaliasin", "Embong Malang", "Blauran", "Pringadi", "Pasar Turi",
 	"Masjid Kemayoran", "Indrapura", "Rajawali", "Jembatan Merah", "Veteran", "Tugu Pahlawan", "Alun Alun Contong", "Siola", "Tunjungan",
 	"Simpang Dukuh", "Gubernur Suryo", "Pangsud", "Sono Kembang", "Urip Sumoharjo", "Santa Maria", "RSAL", "Margorejo", "UIN",
 	"Jemur Ngawinan", "Kerto Menanggal", "Terminal Purabaya", "Ketintang", "Mayjen Yono Suwoyo", "Ir Muhammad", "Mayjen Sungkono",
