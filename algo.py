@@ -275,8 +275,6 @@ transit_dict = {
     ('R1', 'R2'): 'ITS',
     ('R1', 'R2'): 'Manyar Kerta Adi',
     ('R1', 'R2'): 'Kertajaya Indah',
-    ('R2', 'R1'): 'ITS',
-    ('R2', 'R1'): 'Manyar Kerta Adi',
     ('R2', 'R1'): 'Kertajaya Indah',
 
     ('R3', 'R2'): 'Panglima Sudirman',
@@ -305,8 +303,15 @@ transit_dict = {
 def heuristic(node, goal):
     return geodesic(coordinates[node], coordinates[goal]).meters
 
-def astar(graph, start, goal):
-    open_set = [(0, start)]
+def calculate_all_heuristics(goal):
+    all_heuristics = {}
+    for node in coordinates:
+        all_heuristics[node] = heuristic(node, goal)
+    return all_heuristics
+
+
+def astar(graph, start, goal, all_heuristics):
+    open_set = [(all_heuristics[start], start)]
     came_from = {}
     g_score = {start: 0}
 
@@ -321,71 +326,80 @@ def astar(graph, start, goal):
             tentative_g_score = g_score[current_node] + distance
             if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
                 g_score[neighbor] = tentative_g_score
-                f_score = tentative_g_score + heuristic(neighbor, goal)
+                f_score = tentative_g_score + all_heuristics[neighbor]
                 heapq.heappush(open_set, (f_score, neighbor))
                 came_from[neighbor] = current_node
 
     return None
 
-def reconstruct_path(came_from, current_node):
-    path = [current_node]
-    while current_node in came_from:
-        current_node = came_from[current_node]
-        path.insert(0, current_node)
-    return path
+def reconstruct_path(came_from, goal):
+    path = [goal]
+    while goal in came_from:
+        goal = came_from[goal]
+        path.append(goal)
+    return path[::-1]
 
 def find_route(start_rute, end_rute, start_halte, end_halte):
     current_rute = start_rute
     current_halte = start_halte
     goal_rute = end_rute
     goal_halte = end_halte
-
-    transit_key = (current_rute, goal_rute)
-    if transit_key in transit_dict:
-        transit_halte = transit_dict[transit_key]
+    all_heuristics = calculate_all_heuristics(goal_halte)
     
-        path_to_transit = astar(graph[start_rute], start_halte, transit_halte)
-        if path_to_transit:
-            print(f"Rute tercepat dari {start_halte} ke {transit_halte}: {current_rute} - {path_to_transit}")
-        else:
-            print("Rute tidak tersediaaaa.")
-    
-        print(f"Pindah Rute dari {current_rute} ke {goal_rute} melalui {transit_halte}")
-        current_rute = goal_rute
-        current_halte = transit_halte
-
-        path_to_goal = astar(graph[current_rute], transit_halte, goal_halte)
+    if (start_rute == goal_rute):
+        path_to_goal = astar(graph[current_rute], start_halte, end_halte, all_heuristics)
         if path_to_goal:
-            print(f"Rute tercepat dari {transit_halte} ke {goal_halte}: {current_rute} - {path_to_goal}")
-        else:
-            print("Rute tidak tersedia.")
-        
-    else:
-        if current_rute == "R1":
-            transit1 = 'Manyar Kerta Adi' 
-            next_rute ="R2"
-            path_to_transit = astar(graph[start_rute], start_halte, transit1)
-            if path_to_transit:
-                print(f"Rute tercepat dari {start_halte} ke {transit1}: {current_rute} - {path_to_transit}")
-                print(f"Pindah Rute dari {current_rute} ke {next_rute} melalui {transit1}")
-            else:
-                print("Rute tidak tersedia.")
-            current_rute = next_rute
-            start_halte = transit1
-            find_route(current_rute, end_rute, start_halte, end_halte)
+            return print(f"Rute tercepat dari {start_halte} ke {goal_halte}: {current_rute} - {path_to_goal}")
 
-        if current_rute == "R3":
-            transit2 = 'Kaliasin' 
-            next_rute ="R2"
-            path_to_transit = astar(graph[start_rute], start_halte, transit2)
+    else:
+        transit_key = (current_rute, goal_rute)
+        if transit_key in transit_dict:
+            transit_halte = transit_dict[transit_key]
+        
+            path_to_transit = astar(graph[start_rute], start_halte, transit_halte, all_heuristics)
             if path_to_transit:
-                print(f"Rute tercepat dari {start_halte} ke {transit2}: {current_rute} - {path_to_transit}")
-                print(f"Pindah Rute dari {current_rute} ke {next_rute} melalui {transit2}")
+                print(f"Rute tercepat dari {start_halte} ke {transit_halte}: {current_rute} - {path_to_transit}")
             else:
                 print("Rute tidak tersedia.")
-            current_rute = next_rute
-            start_halte = transit2
-            find_route(current_rute, end_rute, start_halte, end_halte)
+        
+            print(f"Pindah Rute dari {current_rute} ke {goal_rute} melalui {transit_halte}")
+            current_rute = goal_rute
+            current_halte = transit_halte
+
+            path_to_goal = astar(graph[current_rute], transit_halte, goal_halte, all_heuristics)
+            if path_to_goal:
+                print(f"Rute tercepat dari {transit_halte} ke {goal_halte}: {current_rute} - {path_to_goal}")
+            else:
+                print("Rute tidak tersedia.")
+            
+        else:
+            if current_rute == "R1":
+                transit1 = 'Manyar Kerta Adi' 
+                next_rute ="R2"
+                all_heuristics = calculate_all_heuristics(transit1)
+                path_to_transit = astar(graph[start_rute], start_halte, transit1, all_heuristics)
+                if path_to_transit:
+                    print(f"Rute tercepat dari {start_halte} ke {transit1}: {current_rute} - {path_to_transit}")
+                    print(f"Pindah Rute dari {current_rute} ke {next_rute} melalui {transit1}")
+                else:
+                    print("Rute tidak tersedia.")
+                current_rute = next_rute
+                start_halte = transit1
+                find_route(current_rute, end_rute, start_halte, end_halte)
+
+            if current_rute == "R3":
+                transit2 = 'Kaliasin' 
+                next_rute ="R2"
+                all_heuristics = calculate_all_heuristics(transit2)
+                path_to_transit = astar(graph[start_rute], start_halte, transit2, all_heuristics)
+                if path_to_transit:
+                    print(f"Rute tercepat dari {start_halte} ke {transit2}: {current_rute} - {path_to_transit}")
+                    print(f"Pindah Rute dari {current_rute} ke {next_rute} melalui {transit2}")
+                else:
+                    print("Rute tidak tersedia.")
+                current_rute = next_rute
+                start_halte = transit2
+                find_route(current_rute, end_rute, start_halte, end_halte)
 
 start_halte = input("Masukkan halte awal: ")
 end_halte = input("Masukkan halte akhir: ")
@@ -395,6 +409,6 @@ for rute, haltes in graph.items():
         start_rute = rute
     if end_halte in haltes:
         end_rute = rute
-    
-
+    if end_rute == "R1" and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
+        start_rute = "R1"
 find_route(start_rute, end_rute, start_halte, end_halte)
