@@ -409,6 +409,8 @@ for rute, haltes in graph.items():
         start_rute = rute
     if end_halte in haltes:
         end_rute = rute
-    if end_rute == "R1" and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
-        start_rute = "R1"
+
+if end_rute == 'R1' and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
+    start_rute = "R1"
+
 find_route(start_rute, end_rute, start_halte, end_halte)
