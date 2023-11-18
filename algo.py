@@ -11,6 +11,7 @@ coordinates = {
     'Galaxy 2': (-7.275649123296138, 112.7815753209705),
     'Kertajaya Indah': (-7.28031744003063, 112.78199946307426),
     'ITS': (-7.279522100625141, 112.79004073186363),
+    'Bundaran ITS': (-7.279221950649834, 112.78974692809514),
     'Manyar Kerta Adi': (-7.280560005159858, 112.78230841637989),
     'RS Haji 2': (-7.282357652128604, 112.78100592475887),
     'Kopertis': (-7.288499130900624, 112.78080890409694),
@@ -39,7 +40,7 @@ coordinates = {
     'RSIA 1': (-7.251104992478879, 112.78368458551469),
     'Kenjeran': (-7.250494216422868, 112.78735526478091),
     'Kejawan Putih Tambak': (-7.276404702853728, 112.80224777760291),
-    'PENS1': (-7.275757768830899, 112.7933853186692),
+    'PENS 1': (-7.275757768830899, 112.7933853186692),
     'Klampis': (-7.280673788384274, 112.77574611106995),
     'Gramedia': (-7.2797059310051555, 112.76356955198271),
     'Kertajaya': (-7.279061037412821, 112.75939621193987),
@@ -88,7 +89,7 @@ coordinates = {
     'UNAIR': (-7.27366051103262, 112.75643583395687),
     'Samsat Manyar': (-7.279447841635969, 112.76398848885918),
     'Koni': (-7.280375015039837, 112.77690688676991),
-    'PENS2': (-7.275601771163525, 112.79317590702696),
+    'PENS 2': (-7.275601771163525, 112.79317590702696),
     'Terminal Purabaya': (-7.351108402153054, 112.72455506909716),
     'Dukuh Menanggal': (-7.343401448621502, 112.72891894210301),
     'Siwalankerto 1': (-7.336679463829906, 112.72903309534225),
@@ -167,8 +168,8 @@ graph = {
     },
 
     'R2': {
-        'Kejawan Putih Tambak': {'PENS1': 1200},
-        'PENS1': {'ITS': 800, 'PENS2': 50},
+        'Kejawan Putih Tambak': {'PENS 1': 1200},
+        'PENS 1': {'ITS': 800, 'PENS 2': 50},
         'ITS': {'Manyar Kerta Adi': 850},
         'Manyar Kerta Adi': {'Klampis': 700},
         'Klampis': {'Gramedia': 1300, 'Koni': 50},
@@ -221,8 +222,9 @@ graph = {
         'UNAIR': {'Samsat Manyar': 1400, 'Gubeng Airlangga': 50},
         'Samsat Manyar': {'Koni': 1300, 'Gramedia': 50},
         'Koni': {'Kertajaya Indah': 550, 'Klampis': 50},
-        'Kertajaya Indah': {'PENS2': 1600},
-        'PENS2': {'Kejawan Putih Tambak': 1200},
+        'Kertajaya Indah': {'Bundaran ITS': 850},
+        'Bundaran ITS': {'PENS 2': 750, 'ITS': 50},
+        'PENS 2': {'Kejawan Putih Tambak': 1200},
     },
 
     'R3': {
@@ -345,66 +347,59 @@ def find_route(start_rute, end_rute, start_halte, end_halte):
     goal_rute = end_rute
     goal_halte = end_halte
     all_heuristics = calculate_all_heuristics(goal_halte)
+
+    result_paths = []  
     
-    if end_rute == 'R1' and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
-        start_rute = "R1"
+    def append_path(route_number, path):
+        result_paths.append((route_number, path))
 
     if (start_rute == goal_rute):
         path_to_goal = astar(graph[current_rute], start_halte, end_halte, all_heuristics)
         if path_to_goal:
-            return print(f"Rute tercepat dari {start_halte} ke {goal_halte}: {current_rute} - {path_to_goal}")
+            append_path(current_rute, path_to_goal)
 
     else:
         transit_key = (current_rute, goal_rute)
         if transit_key in transit_dict:
             transit_halte = transit_dict[transit_key]
-            
 
             path_to_transit = astar(graph[start_rute], start_halte, transit_halte, all_heuristics)
             if path_to_transit:
-                print(f"Rute tercepat dari {start_halte} ke {transit_halte}: {current_rute} - {path_to_transit}")
-            else:
-                print("Rute tidak tersedia.")
-        
-            print(f"Pindah Rute dari {current_rute} ke {goal_rute} melalui {transit_halte}")
+                append_path(current_rute, path_to_transit)
+
             current_rute = goal_rute
             current_halte = transit_halte
 
             path_to_goal = astar(graph[current_rute], transit_halte, goal_halte, all_heuristics)
             if path_to_goal:
-                print(f"Rute tercepat dari {transit_halte} ke {goal_halte}: {current_rute} - {path_to_goal}")
-            else:
-                print("Rute tidak tersedia.")
-            
+                append_path(current_rute, path_to_goal)
+
         else:
             if current_rute == "R1":
-                transit1 = 'Manyar Kerta Adi' 
-                next_rute ="R2"
+                transit1 = 'Manyar Kerta Adi'
+                next_rute = "R2"
                 all_heuristics = calculate_all_heuristics(transit1)
                 path_to_transit = astar(graph[start_rute], start_halte, transit1, all_heuristics)
                 if path_to_transit:
-                    print(f"Rute tercepat dari {start_halte} ke {transit1}: {current_rute} - {path_to_transit}")
-                    print(f"Pindah Rute dari {current_rute} ke {next_rute} melalui {transit1}")
-                else:
-                    print("Rute tidak tersedia.")
+                    append_path(current_rute, path_to_transit)
+
                 current_rute = next_rute
                 start_halte = transit1
-                find_route(current_rute, end_rute, start_halte, end_halte)
+                result_paths.extend(find_route(current_rute, end_rute, start_halte, end_halte))
 
             if current_rute == "R3":
-                transit2 = 'Kaliasin' 
-                next_rute ="R2"
+                transit2 = 'Kaliasin'
+                next_rute = "R2"
                 all_heuristics = calculate_all_heuristics(transit2)
                 path_to_transit = astar(graph[start_rute], start_halte, transit2, all_heuristics)
                 if path_to_transit:
-                    print(f"Rute tercepat dari {start_halte} ke {transit2}: {current_rute} - {path_to_transit}")
-                    print(f"Pindah Rute dari {current_rute} ke {next_rute} melalui {transit2}")
-                else:
-                    print("Rute tidak tersedia.")
+                    append_path(current_rute, path_to_transit)
+
                 current_rute = next_rute
                 start_halte = transit2
-                find_route(current_rute, end_rute, start_halte, end_halte)
+                result_paths.extend(find_route(current_rute, end_rute, start_halte, end_halte))
 
+    return result_paths
 
 start_halte = input("Masukkan halte awal: ")
 end_halte = input("Masukkan halte akhir: ")
@@ -417,4 +412,13 @@ for rute, haltes in graph.items():
     if end_halte in haltes:
         end_rute = rute
 
-find_route(start_rute, end_rute, start_halte, end_halte)
+if end_rute == 'R1' and (start_halte == 'Kertajaya Indah' or start_halte == "ITS" or start_halte == "Manyar Kerta Adi"):
+        start_rute = "R1"
+
+if ((start_rute == 'R1' and end_rute == 'R3') or (start_rute == 'R2' and end_rute == 'R3')) and (end_halte == 'Panglima Sudirman' or end_halte == "Sono Kembang" or end_halte == "Urip Sumaharjo 2" or end_halte == "Pandegiling 2" or end_halte == "Santa Maria" ):
+        end_rute = "R2"
+
+result_paths = find_route(start_rute, end_rute, start_halte, end_halte)
+
+for i, (route_number, path) in enumerate(result_paths):
+    print(f"{route_number} - {path}")
