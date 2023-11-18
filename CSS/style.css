@@ -99,12 +99,47 @@ body.my-login-page {
   .list-items:hover {
 	background-color: #dddddd;
   }
-
   ul#shortestRoute li{
-	background-color: green;
-	border: 1px solid green;
 	border-radius: 5px;
 	padding: 5px 4px;
 	margin-bottom: 10px;
 	color: #dddddd;
   }
+
+
+  ul#shortestRoute li:nth-child(1){
+	background-color: rgb(58, 186, 58);
+	border: 1px solid rgb(58, 186, 58);
+
+  }
+  ul#shortestRoute li:nth-child(2){
+	background-color: rgb(186, 58, 58);
+	border: 1px solid rgb(186, 58, 58);
+  }
+
+  ul#shortestRoute li:nth-child(3){
+	background-color: rgb(101, 58, 186);
+	border: 1px solid rgb(118, 58, 186);
+  }
+
+  ul#shortestRoute li:nth-child(4){
+	background-color: rgb(58, 171, 186);
+	border: 1px solid rgb(118, 58, 186);
+  }
+  ul#shortestRoute li:nth-child(5){
+	background-color: rgb(130, 186, 58);
+	border: 1px solid rgb(118, 58, 186);
+  }
+  ul#shortestRoute li:nth-child(6){
+	background-color: rgb(186, 162, 58);
+	border: 1px solid rgb(118, 58, 186);
+  }
+  ul#shortestRoute li:nth-child(7){
+	background-color: rgb(101, 58, 186);
+	border: 1px solid rgb(118, 58, 186);
+  }
+  ul#shortestRoute li:nth-child(8){
+	background-color: rgb(101, 58, 186);
+	border: 1px solid rgb(118, 58, 186);
+  }
+
