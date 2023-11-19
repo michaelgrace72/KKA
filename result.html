@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="CSS/style.css">
 
     <!-- pyscript -->
-    <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css">
-    <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
+    <!-- <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script> -->
 </head>
 <body class="my-login-page">
     <section class="h-100">
@@ -62,9 +62,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
+
+        // ShortestRoute
+        var shortestPath = localStorage.getItem('shortestPathString');
+        var shortestPathArray = shortestPath.split('->');
+
+        var currentColor ='';
+        
+        shortestPathArray.forEach(function (element) {
+        var listItem = document.createElement('li');
+
+        if (element === 'R1') {
+            currentColor = '#49be25';
+        } else if (element === 'R2') {
+            currentColor = '#be4d25';
+
+        } else if (element === 'R3') {
+            currentColor = '#25a5be';
+        }
+
+        listItem.style.backgroundColor = currentColor;
+
+        listItem.innerText = element;
+        shortestRoute.appendChild(listItem);
+        });
         // Sample data for initial location details
-        var initialLocationPrice = "Sample Price";
-        var initialLocationTime = "Sample Time";
+        var initialLocationPrice = "Rp." + shortestPathArray.length* 1000 + ",-";
+        var initialLocationTime = shortestPathArray.length * 5 + " minutes";
 
         var initialLocation =  localStorage.getItem('startHalte');
 	    var endlocation = localStorage.getItem('endHalte');
@@ -77,14 +101,7 @@
         document.getElementById('lastLocation').innerText = endlocation;
         document.getElementById('goalLocation').innerText = endlocation;
 
-        var shortestPath = localStorage.getItem('shortestPathString');
-        var shortestPathArray = shortestPath.split('->');
-
-        shortestPathArray.forEach(function (element) {
-        var listItem = document.createElement('li');
-        listItem.innerText = element;
-        shortestRoute.appendChild(listItem);
-        });
+        
     </script>
 </body>
 </html>
