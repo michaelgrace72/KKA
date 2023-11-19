@@ -281,9 +281,9 @@ function redirectToResultPage(event) {
 	};
 
 	var transitDict = {
-		'R1_R2': 'ITS',
-		'R1_R2': 'Manyar Kerta Adi',
-		'R1_R2': 'Kertajaya Indah',
+		// 'R1_R2': 'ITS',
+		// 'R1_R2': 'Manyar Kerta Adi',
+		// 'R1_R2': 'Kertajaya Indah',
 		'R2_R1': 'Kertajaya Indah',
 
 		'R3_R2': 'Panglima Sudirman',
@@ -305,13 +305,11 @@ function redirectToResultPage(event) {
 		'R3_R2': 'Pandegiling 1',
 		'R3_R2': 'Basuki Rahmat',
 		'R3_R2': 'Kaliasin',
-		'R3_R2': 'Simpang Dukuh',
-		'R3_R2': 'Gubernur Suryo'
 	};
 	// console.log(transitDict['R1']['R2']); 
 	// console.log(transitDict['R2']['R1']); 
 	// console.log(transitDict['R3']['R2']);
-	console.log(transitDict['R1_R2']); // Output: ['Panglima Sudirman', 'Sono Kembang', 'Urip Sumaharjo 2', 'Pandegiling 2', 'Santa Maria', 'Pandegiling 2', 'Darmo', 'Panglima Sudirman', 'Sono Kembang', 'Urip Sumaharjo 2', 'Pandegiling 2', 'Santa Maria', 'Pandegiling 2', 'Darmo', 'RS Darmo', 'Pandegiling 1', 'Basuki Rahmat', 'Kaliasin', 'Simpang Dukuh', 'Gubernur Suryo']
+	// console.log(transitDict['R1_R2']); // Output: ['Panglima Sudirman', 'Sono Kembang', 'Urip Sumaharjo 2', 'Pandegiling 2', 'Santa Maria', 'Pandegiling 2', 'Darmo', 'Panglima Sudirman', 'Sono Kembang', 'Urip Sumaharjo 2', 'Pandegiling 2', 'Santa Maria', 'Pandegiling 2', 'Darmo', 'RS Darmo', 'Pandegiling 1', 'Basuki Rahmat', 'Kaliasin', 'Simpang Dukuh', 'Gubernur Suryo']
 	function heuristic(node, goal) {
 		return geolib.getDistance(coordinates[node], coordinates[goal]);
 	}
@@ -363,13 +361,14 @@ function redirectToResultPage(event) {
 	}
 
 	function findRoute(startRute, endRute, startHalte, endHalte) {
-		let currentRute = startRute;
-		let currentHalte = startHalte;
-		const goalRute = endRute;
-		const goalHalte = endHalte;
-		let allHeuristics = calculateAllHeuristics(goalHalte);
+		var currentRute = startRute;
+		var currentHalte = startHalte;
+		var goalRute = endRute;
+		var goalHalte = endHalte;
+		var allHeuristics = calculateAllHeuristics(goalHalte);
 	
 		const resultPaths = [];
+		const var1 = []; 
 	
 		function appendPath(routeNumber, path) {
 			resultPaths.push([routeNumber, ...path]);
@@ -380,7 +379,8 @@ function redirectToResultPage(event) {
 			if (pathToGoal) {
 				appendPath(currentRute, pathToGoal);
 			}
-		} else {
+		} 
+		else {
 			var transitKey = currentRute + '_' + goalRute;
 			if (transitKey in transitDict) {
 				var transitHalte = transitDict[transitKey];
@@ -397,43 +397,44 @@ function redirectToResultPage(event) {
 				if (pathToGoal) {
 					appendPath(currentRute, pathToGoal);
 				}
-			} else {
+			}
+			else {
 				if (currentRute === "R1") {
-					const transit1 = 'Manyar Kerta Adi';
-					const nextRute = "R2";
+					var transit1 = 'Manyar Kerta Adi';
+					var nextRute = 'R2';
 					allHeuristics = calculateAllHeuristics(transit1);
-					const pathToTransit = astar(graph[startRute], startHalte, transit1, allHeuristics);
+					var pathToTransit = astar(graph[startRute], startHalte, transit1, allHeuristics);
 					if (pathToTransit) {
 						appendPath(currentRute, pathToTransit);
 					}
-	
-					currentRute = nextRute;
-					startHalte = transit1;
-	
-					// Pemanggilan rekursif setelah pembaruan nilai currentRute dan startHalte
-					resultPaths.push(...findRoute(currentRute, endRute, startHalte, endHalte));
+					
+                    currentRute = nextRute;
+                    startHalte = transit1;
+
+                    resultPaths.push(...findRoute(currentRute, endRute, startHalte, endHalte));
 				}
 	
 				if (currentRute === "R3") {
-					const transit2 = 'Kaliasin';
-					const nextRute = "R2";
+					var transit2 = 'Kaliasin';
+					var nextRute = 'R2';
 					allHeuristics = calculateAllHeuristics(transit2);
-					const pathToTransit = astar(graph[startRute], startHalte, transit2, allHeuristics);
+					var pathToTransit = astar(graph[startRute], startHalte, transit2, allHeuristics);
 					if (pathToTransit) {
 						appendPath(currentRute, pathToTransit);
 					}
 	
-					currentRute = nextRute;
-					startHalte = transit2;
-	
-					// Pemanggilan rekursif setelah pembaruan nilai currentRute dan startHalte
-					resultPaths.push(...findRoute(currentRute, endRute, startHalte, endHalte));
+                    currentRute = nextRute;
+                    startHalte = transit2;
+                    resultPaths.push(...findRoute(currentRute, endRute, startHalte, endHalte));
 				}
 			}
 		}
 	
 		return resultPaths;
 	}
+
+
+
 	var startRute = null;
 	var endRute = null;
 
@@ -456,8 +457,12 @@ function redirectToResultPage(event) {
 	if (endRute === 'R1' && (startHalte === 'Kertajaya Indah' || startHalte === "ITS" || startHalte === "Manyar Kerta Adi")) {
 		startRute = "R1";
 	}
+
+	if (startRute === 'R1' && (endHalte === 'Kertajaya Indah' || endHalte === "ITS" || endHalte === "Manyar Kerta Adi")) {
+		endRute = "R1";
+	}
 	
-	if ((startRute === 'R1' && endRute === 'R3') || (startRute === 'R2' && endRute === 'R3') && (endHalte === 'Panglima Sudirman' || endHalte === 'Sono Kembang' || endHalte === 'Urip Sumaharjo 2' || endHalte === 'Pandegiling 2' || endHalte === 'Santa Maria')) {
+	if (((startRute === 'R1' && endRute === 'R3') || (startRute === 'R2' && endRute === 'R3')) && (endHalte === 'Panglima Sudirman' || endHalte === 'Sono Kembang' || endHalte === 'Urip Sumaharjo 2' || endHalte === 'Pandegiling 2' || endHalte === 'Santa Maria')){
 		endRute = 'R2';
 	}
 
@@ -483,8 +488,8 @@ function redirectToResultPage(event) {
     // Construct the URL for the result page with query parameters
 
     // Redirect the user to the result page
-	// window.stop();
-    window.location.href = "result.html";
+	window.stop();
+    // window.location.href = "result.html";
 }
 
 
