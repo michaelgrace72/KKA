@@ -70,18 +70,20 @@
         var shortestPathArray = shortestPath.split('->');
 
         var currentColor ='';
-        
+        var price = 0;
         shortestPathArray.forEach(function (element) {
         var listItem = document.createElement('li');
 
         if (element === 'R1') {
             currentColor = '#49be25';
+            price += 5000;
         } else if (element === 'R2') {
             currentColor = '#be4d25';
-
+            price += 5000;
         } else if (element === 'R3') {
             currentColor = '#25a5be';
-        }
+            price += 5000;
+        } 
 
         listItem.style.backgroundColor = currentColor;
 
@@ -89,8 +91,8 @@
         shortestRoute.appendChild(listItem);
         });
         // Sample data for initial location details
-        var initialLocationPrice = "Rp." + shortestPathArray.length* 1000 + ",-";
-        var initialLocationTime = shortestPathArray.length * 5 + " minutes";
+        var initialLocationPrice = "Rp." + price + ",-";
+        var initialLocationTime = shortestPathArray.length * 3  + " minutes";
 
         var initialLocation =  localStorage.getItem('startHalte');
 	    var endlocation = localStorage.getItem('endHalte');
