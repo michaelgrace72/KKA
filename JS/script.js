@@ -488,8 +488,8 @@ function redirectToResultPage(event) {
     // Construct the URL for the result page with query parameters
 
     // Redirect the user to the result page
-	window.stop();
-    // window.location.href = "result.html";
+	// window.stop();
+    window.location.href = "result.html";
 }
 
 
