@@ -281,9 +281,9 @@ function redirectToResultPage(event) {
 	};
 
 	var transitDict = {
-		// 'R1_R2': 'ITS',
-		// 'R1_R2': 'Manyar Kerta Adi',
-		// 'R1_R2': 'Kertajaya Indah',
+		'R1_R2': 'ITS',
+		'R1_R2': 'Manyar Kerta Adi',
+		'R1_R2': 'Kertajaya Indah',
 		'R2_R1': 'Kertajaya Indah',
 
 		'R3_R2': 'Panglima Sudirman',
